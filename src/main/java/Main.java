@@ -16,7 +16,7 @@ public class Main {
             ConnectionFromBd.closeConnection();
             System.out.println(connection.isClosed());
         }catch (FileNotFoundException | SQLException e){
-            e.printStackTrace();
+            e.printStackTrace();;
         }
     }
 }
