@@ -1,7 +1,6 @@
 package repository;
 
 import model.Account;
-import model.Client;
 import util.ConnectionFromBd;
 
 import java.sql.ResultSet;
