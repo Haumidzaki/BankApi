@@ -80,7 +80,7 @@ public class TestCardsRepository {
     }
 
     @Test
-    public void deleteClient() {
+    public void deleteCard() {
         long id = 100_004l;
 
         boolean res = cardRepository.delete(id);
@@ -97,7 +97,7 @@ public class TestCardsRepository {
     }
 
     @Test
-    public void getAllClient(){
+    public void getAllCard(){
         List<Cards> oldList = new ArrayList<>();
 
         Client client1 = new Client(100_000l, "Vasay");
