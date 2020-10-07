@@ -6,6 +6,9 @@ public class ConnectionFromBd {
     private static final String DB_URL2 = "jdbc:h2:mem:default";
     private static Connection connection;
 
+    private ConnectionFromBd() {
+    }
+
     public static Connection getConnection(){
         try {
             if (connection != null && !connection.isClosed())
