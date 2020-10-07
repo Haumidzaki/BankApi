@@ -17,7 +17,6 @@ import java.util.concurrent.atomic.AtomicLong;
 
 public class TestClientRepository {
     private ClientRepositoryImpl repository;
-    private AtomicLong newId;
 
     @Before
     public void initBD() throws FileNotFoundException, SQLException {
@@ -27,7 +26,6 @@ public class TestClientRepository {
         RunScript.execute(connection, new FileReader("src/main/resources/bd/populateBD.sql"));
 
         repository = new ClientRepositoryImpl();
-        newId = new AtomicLong(100_006);
     }
 
     @After
