@@ -3,25 +3,32 @@ package repository;
 import model.Account;
 import util.ConnectionFromBd;
 
-import java.sql.Connection;
 import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.SQLException;
 import java.util.List;
 
 public class AccountRepositoryImpl implements AccountRepository {
-    private Connection connection;
+
+    private ClientRepositoryImpl clientRepository = new ClientRepositoryImpl();
 
     @Override
     public Account getById(long id) {
-     /*   connection = ConnectionFromBd.getConnection();
-        Statement statement = connection.createStatement();
-        ResultSet set = statement.executeQuery(String.format("SELECT * FROM accounts WHERE id = %d", id));
+        Account account = null;
+        try {
+          ResultSet set = ConnectionFromBd.getStatement()
+                  .executeQuery(String.format("SELECT * FROM accounts WHERE id = %d", id));
 
-        while (set.next()){
-
+          while (set.next()){
+              account = new Account(set.getLong("id"),
+                      clientRepository.getById(set.getLong("clients_id")),
+                      set.getString("number"),
+                      set.getDouble("sum"),
+                      set.getString("currency"));
+          }
+        }catch (SQLException e){
+            e.printStackTrace();
         }
-        return set.;*/
-        return null;
+        return account;
     }
 
     @Override
