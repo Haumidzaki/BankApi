@@ -17,11 +17,13 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class TestCardsRepository {
     private CardRepositoryImpl cardRepository;
     private AccountRepositoryImpl accountRepository;
     private ClientRepositoryImpl clientRepository;
+    private AtomicLong newId;
 
     @Before
     public void initBD() throws FileNotFoundException, SQLException {
@@ -31,6 +33,7 @@ public class TestCardsRepository {
         RunScript.execute(connection, new FileReader("src/main/resources/bd/populateBD.sql"));
 
         cardRepository = new CardRepositoryImpl();
+        newId = new AtomicLong(100_006);
     }
 
     @After

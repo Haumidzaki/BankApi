@@ -8,7 +8,6 @@ import org.junit.Test;
 import repository.AccountRepositoryImpl;
 import repository.ClientRepositoryImpl;
 import util.ConnectionFromBd;
-import util.GetNewId;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -16,10 +15,12 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class TestAccountRepository {
     private AccountRepositoryImpl repository;
     private ClientRepositoryImpl clientRepository;
+    private AtomicLong newId;
 
     @Before
     public void initBD() throws FileNotFoundException, SQLException {
@@ -30,6 +31,7 @@ public class TestAccountRepository {
 
         repository = new AccountRepositoryImpl();
         clientRepository = new ClientRepositoryImpl();
+        newId = new AtomicLong(100_006);
     }
 
     @After
@@ -50,7 +52,7 @@ public class TestAccountRepository {
 
     @Test
     public void createAccount() {
-        Client client = new Client(GetNewId.getNewId(), "Tor");
+        Client client = new Client(newId.getAndIncrement(), "Tor");
         clientRepository.create(client);
 
         Account newAccount = new Account(client,
