@@ -9,7 +9,7 @@ VALUES ('Vasay'), //100_000
 
 INSERT INTO accounts (clients_id, number, sum, currency)
 VALUES ('100000', '1111111111', '1000', 'RUB'), //100_002
-       ('100001', '2222222222', '2000', 'RUB'); //100_003NTO accounts
+       ('100001', '2222222222', '2000', 'RUB'); //100_003
 
 INSERT INTO cards (account_id, number)
 VALUES ('100002', 1234 - 1234 - 1234 - 1234),
