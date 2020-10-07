@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<archive>
+  <dir sourceOnDisk="C:\Users\art68\Desktop\bankApi\target\classes" targetInArchive="/" />
+  <file sourceOnDisk="C:\Users\art68\.m2\repository\com\h2database\h2\1.4.200\h2-1.4.200.jar" targetInArchive="/h2-1.4.200.jar" />
+</archive>
+

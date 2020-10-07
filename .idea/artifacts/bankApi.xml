@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="bankApi">
+    <output-path>$PROJECT_DIR$/out/artifacts/bankApi</output-path>
+    <root id="archive" name="bankApi.jar">
+      <element id="module-output" name="bankApi" />
+      <element id="library" level="project" name="Maven: com.h2database:h2:1.4.200" />
+    </root>
+  </artifact>
+</component>
