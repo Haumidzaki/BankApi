@@ -10,6 +10,7 @@ public class Main {
 
     public static void main(String[] args) {
         try{
+            System.out.println("Test");
             Connection connection = ConnectionFromBd.getConnection();
             RunScript.execute(connection, new FileReader("src/main/resources/bd/initBD.sql"));
             RunScript.execute(connection, new FileReader("src/main/resources/bd/populateBD.sql"));
