@@ -8,7 +8,6 @@ import org.junit.Before;
 import org.junit.Test;
 import repository.AccountRepositoryImpl;
 import repository.CardRepositoryImpl;
-import repository.ClientRepositoryImpl;
 import util.ConnectionFromBd;
 
 import java.io.FileNotFoundException;
@@ -17,12 +16,10 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 
 public class TestCardsRepository {
     private CardRepositoryImpl cardRepository;
     private AccountRepositoryImpl accountRepository;
-    private AtomicLong newId;
 
     @Before
     public void initBD() throws FileNotFoundException, SQLException {
@@ -33,7 +30,6 @@ public class TestCardsRepository {
 
         cardRepository = new CardRepositoryImpl();
         accountRepository = new AccountRepositoryImpl();
-        newId = new AtomicLong(100_006);
     }
 
     @After

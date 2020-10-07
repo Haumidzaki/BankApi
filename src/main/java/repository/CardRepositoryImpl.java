@@ -24,7 +24,6 @@ public class CardRepositoryImpl implements CardRepository {
                 Client client = account.getClient();
                 cards = new Cards(set.getLong("id"), account, client, set.getString("number"));
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -34,14 +33,14 @@ public class CardRepositoryImpl implements CardRepository {
     @Override
     public Cards getById(long id) {
         Cards cards = null;
+        Account account = null;
         try {
             ResultSet set = ConnectionFromBd.getStatement().executeQuery(String.format("SELECT * FROM cards WHERE id = %d", id));
             while (set.next()) {
-                Account account = accountRepository.getById(set.getInt("account_id"));
+                account = accountRepository.getById(set.getLong("account_id"));
                 Client client = account.getClient();
                 cards = new Cards(set.getLong("id"), account, client, set.getString("number"));
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
