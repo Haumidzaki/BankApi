@@ -22,7 +22,6 @@ import java.util.concurrent.atomic.AtomicLong;
 public class TestCardsRepository {
     private CardRepositoryImpl cardRepository;
     private AccountRepositoryImpl accountRepository;
-    private ClientRepositoryImpl clientRepository;
     private AtomicLong newId;
 
     @Before
@@ -33,6 +32,7 @@ public class TestCardsRepository {
         RunScript.execute(connection, new FileReader("src/main/resources/bd/populateBD.sql"));
 
         cardRepository = new CardRepositoryImpl();
+        accountRepository = new AccountRepositoryImpl();
         newId = new AtomicLong(100_006);
     }
 
@@ -42,12 +42,23 @@ public class TestCardsRepository {
     }
 
     @Test
+    public void getCardByNumber() {
+        Client client = new Client(100_000l, "Vasay");
+        Account account = new Account(100_002l, client, "1111111111", 1000d, "RUB");
+        Cards oldCards = new Cards(100_004l, account, client, "1234 - 1234 - 1234 - 1234");
+        Cards newCards = cardRepository.getCardByNumber("1234 - 1234 - 1234 - 1234");
+
+        Assert.assertEquals(oldCards, newCards);
+
+    }
+
+    @Test
     public void getCardById() {
         Client client = new Client(100_000l, "Vasay");
-        Account account = new Account(100_000l, client, "1111111111", 1000d, "RUB");
-        Cards oldCards = new Cards(100_002l, account, client, "1234 - 1234 - 1234 - 1234");
+        Account account = new Account(100_002l, client, "1111111111", 1000d, "RUB");
+        Cards oldCards = new Cards(100_004l, account, client, "1234 - 1234 - 1234 - 1234");
 
-        Cards newCards = cardRepository.getById(100_002l);
+        Cards newCards = cardRepository.getById(100_004l);
 
         Assert.assertEquals(oldCards, newCards);
     }

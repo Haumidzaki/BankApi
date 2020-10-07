@@ -16,7 +16,19 @@ public class CardRepositoryImpl implements CardRepository {
 
     @Override
     public Cards getCardByNumber(String number) {
-        return null;
+        Cards cards = null;
+        try {
+            ResultSet set = ConnectionFromBd.getStatement().executeQuery(String.format("SELECT * FROM cards WHERE number LIKE '%s'", number));
+            while (set.next()) {
+                Account account = accountRepository.getById(set.getInt("account_id"));
+                Client client = account.getClient();
+                cards = new Cards(set.getLong("id"), account, client, set.getString("number"));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return cards;
     }
 
     @Override
