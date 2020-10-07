@@ -1,8 +1,5 @@
 package repository;
 
-import model.Cards;
-import model.Client;
-
 import java.util.List;
 
 public interface StandartRepo<T> {
