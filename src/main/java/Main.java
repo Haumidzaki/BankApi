@@ -1,6 +1,6 @@
 import org.h2.tools.RunScript;
 import util.ConnectionFromBd;
-import util.HttpServerStarter;
+import util.HttpServerController;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -15,10 +15,7 @@ public class Main {
             Connection connection = ConnectionFromBd.getConnection();
             RunScript.execute(connection, new FileReader("src/main/resources/bd/initBD.sql"));
             RunScript.execute(connection, new FileReader("src/main/resources/bd/populateBD.sql"));
-            HttpServerStarter.startServer();
-
-            ConnectionFromBd.closeConnection();
-            System.out.println(connection.isClosed());
+            HttpServerController.startServer();
         } catch (FileNotFoundException | SQLException e){
             e.printStackTrace();
         }
