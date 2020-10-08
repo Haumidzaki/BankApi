@@ -42,8 +42,8 @@ public class TestCardsRepository {
     public void getCardByNumber() {
         Client client = new Client(100_000l, "Vasay");
         Account account = new Account(100_002l, client, "1111111111", 1000d, "RUB");
-        Cards oldCards = new Cards(100_004l, account, client, "1234 - 1234 - 1234 - 1234");
-        Cards newCards = cardRepository.getCardByNumber("1234 - 1234 - 1234 - 1234");
+        Cards oldCards = new Cards(100_004l, account, client, "1234-1234-1234-1234");
+        Cards newCards = cardRepository.getCardByNumber("1234-1234-1234-1234");
 
         Assert.assertEquals(oldCards, newCards);
 
@@ -53,7 +53,7 @@ public class TestCardsRepository {
     public void getCardById() {
         Client client = new Client(100_000l, "Vasay");
         Account account = new Account(100_002l, client, "1111111111", 1000d, "RUB");
-        Cards oldCards = new Cards(100_004l, account, client, "1234 - 1234 - 1234 - 1234");
+        Cards oldCards = new Cards(100_004l, account, client, "1234-1234-1234-1234");
 
         Cards newCards = cardRepository.getById(100_004l);
 
@@ -103,7 +103,7 @@ public class TestCardsRepository {
 
         Client client1 = new Client(100_000l, "Vasay");
         Account account1 = new Account(100_000l, client1, "1111111111", 1000d, "RUB");
-        Cards oldCards1 = new Cards(100_002l, account1, client1, "1234 - 1234 - 1234 - 1234");
+        Cards oldCards1 = new Cards(100_002l, account1, client1, "1234-1234-1234-1234");
 
         Client client2 = new Client(100_001l, "Petya");
         Account account2 = new Account(100_001l, client2, "2222222222", 2000d, "RUB");
