@@ -1,6 +1,5 @@
 package handlers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import model.Account;
@@ -25,18 +24,23 @@ public class AccountHandler implements HttpHandler {
                 try {
                     response = getAccountBalance(uri);
                     t.sendResponseHeaders(200, response.length());
-                } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
+                } catch (NumberFormatException | NullPointerException | ArrayIndexOutOfBoundsException e) {
                     response = "Wrong id format";
                     t.sendResponseHeaders(400, response.length());
                 }
                 break;
             case "PATCH":
-                response = updateAccountBalance(uri);
-                if (response == null) {
-                    response = "Not enough money to update balance";
+                try {
+                    response = updateAccountBalance(uri);
+                    if (response == null) {
+                        response = "Not enough money to update balance";
+                        t.sendResponseHeaders(400, response.length());
+                    } else {
+                        t.sendResponseHeaders(200, response.length());
+                    }
+                } catch (NumberFormatException | NullPointerException | ArrayIndexOutOfBoundsException e) {
+                    response = "Wrong id format";
                     t.sendResponseHeaders(400, response.length());
-                } else {
-                    t.sendResponseHeaders(200, response.length());
                 }
                 break;
             default:
@@ -52,7 +56,7 @@ public class AccountHandler implements HttpHandler {
     public String getAccountBalance(String uri) throws NumberFormatException, ArrayIndexOutOfBoundsException {
         long id = Long.parseLong(uri.split("/")[2]);
         Account account = accountService.getAccountInfo(id);
-        return String.format("Balance of account with id = %d is %f", id, account.getSum());
+        return String.format("Balance of account with id = %d is %.2f", id, account.getSum());
     }
 
     public String updateAccountBalance(String uri) {
@@ -61,7 +65,7 @@ public class AccountHandler implements HttpHandler {
         double sum = Double.parseDouble(idWithParams.split("=")[1]);
         Account account = accountService.updateAccountSum(id, sum);
         if (account == null) return null;
-        else return String.format("New balance of account with id = %d is %f", id, account.getSum());
+        else return String.format("New balance of account with id = %d is %.2f", id, account.getSum());
     }
 }
 

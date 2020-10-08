@@ -1,10 +1,10 @@
 package handlers;
 
+import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import model.Account;
 import model.Cards;
 import service.AccountService;
 
@@ -40,7 +40,7 @@ public class CardHandler implements HttpHandler {
                 try {
                     response = createCardForAccount(uri);
                     t.sendResponseHeaders(200, response.length());
-                } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
+                } catch (NullPointerException | NumberFormatException | ArrayIndexOutOfBoundsException e) {
                     response = "Wrong id format";
                     t.sendResponseHeaders(400, response.length());
                 } catch (JsonProcessingException e) {
