@@ -4,7 +4,10 @@ import model.Account;
 import model.Cards;
 import model.Client;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class AccountServiceImpl implements AccountService {
     @Override
@@ -19,7 +22,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public Account getAccountInfo(long accountId) {
-        return new Account(354645L, new Client(2432423L, "Pupa"), "42343242342", 1337D, "UAH");
+        return null;
     }
 
     @Override
