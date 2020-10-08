@@ -5,20 +5,33 @@ import model.Cards;
 import model.Client;
 import util.ConnectionFromBd;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class CardRepositoryImpl implements CardRepository {
+    private static final String SQL_GET_CARD_BY_NUMBER = "SELECT * FROM cards WHERE number LIKE ?";
+    private static final String SQL_GET_CARD_BY_ID = "SELECT * FROM cards WHERE id = ?";
+    private static final String SQL_CREATE_CARD = "INSERT INTO cards (account_id, number) VALUES (?, ?)";
+    private static final String SQL_UPDATE_CARD = "UPDATE cards SET account_id = ?, number = ? WHERE id = ?";
+    private static final String SQL_DELETE_CARD = "DELETE FROM cards WHERE id = ?";
+    private static final String SQL_GET_ALL_CARD = "SELECT * FROM cards";
 
-    private AccountRepositoryImpl accountRepository = new AccountRepositoryImpl();
+    private AccountRepository accountRepository;
+
+    public CardRepositoryImpl(AccountRepository accountRepository) {
+        this.accountRepository = accountRepository;
+    }
 
     @Override
     public Cards getCardByNumber(String number) {
         Cards cards = null;
         try {
-            ResultSet set = ConnectionFromBd.getStatement().executeQuery(String.format("SELECT * FROM cards WHERE number LIKE '%s'", number));
+            PreparedStatement statement = ConnectionFromBd.getConnection().prepareStatement(SQL_GET_CARD_BY_NUMBER);
+            statement.setString(1, number);
+            ResultSet set = statement.executeQuery();
             while (set.next()) {
                 Account account = accountRepository.getById(set.getInt("account_id"));
                 Client client = account.getClient();
@@ -35,7 +48,9 @@ public class CardRepositoryImpl implements CardRepository {
         Cards cards = null;
         Account account = null;
         try {
-            ResultSet set = ConnectionFromBd.getStatement().executeQuery(String.format("SELECT * FROM cards WHERE id = %d", id));
+            PreparedStatement statement = ConnectionFromBd.getConnection().prepareStatement(SQL_GET_CARD_BY_ID);
+            statement.setLong(1, id);
+            ResultSet set = statement.executeQuery();
             while (set.next()) {
                 account = accountRepository.getById(set.getLong("account_id"));
                 Client client = account.getClient();
@@ -52,8 +67,10 @@ public class CardRepositoryImpl implements CardRepository {
         boolean res = true;
 
         try {
-            ConnectionFromBd.getStatement().executeUpdate(String
-                    .format("INSERT INTO cards (account_id, number) VALUES (%s, '%s')", cards.getAccount().getId(), cards.getNumber()));
+            PreparedStatement statement = ConnectionFromBd.getConnection().prepareStatement(SQL_CREATE_CARD);
+            statement.setLong(1, cards.getAccount().getId());
+            statement.setString(2, cards.getNumber());
+            statement.executeUpdate();
         } catch (SQLException e) {
             res = false;
             e.printStackTrace();
@@ -66,9 +83,11 @@ public class CardRepositoryImpl implements CardRepository {
         boolean res = true;
 
         try {
-            ConnectionFromBd.getStatement().executeUpdate(String
-                    .format("UPDATE cards SET account_id = '%d', number = %s WHERE id = '%d'",
-                            cards.getAccount().getId(), cards.getNumber(), id));
+            PreparedStatement statement = ConnectionFromBd.getConnection().prepareStatement(SQL_UPDATE_CARD);
+            statement.setLong(1, cards.getAccount().getId());
+            statement.setString(2, cards.getNumber());
+            statement.setLong(3, id);
+            statement.executeUpdate();
         } catch (SQLException e) {
             res = false;
             e.printStackTrace();
@@ -81,7 +100,9 @@ public class CardRepositoryImpl implements CardRepository {
         boolean res = true;
 
         try {
-            ConnectionFromBd.getStatement().executeUpdate(String.format("DELETE FROM cards WHERE id = %d", id));
+            PreparedStatement statement = ConnectionFromBd.getConnection().prepareStatement(SQL_DELETE_CARD);
+            statement.setLong(1, id);
+            statement.executeUpdate();
         } catch (SQLException e) {
             res = false;
             e.printStackTrace();
@@ -93,7 +114,8 @@ public class CardRepositoryImpl implements CardRepository {
     public List<Cards> getAll() {
         List<Cards> list = new ArrayList<>();
         try {
-            ResultSet set = ConnectionFromBd.getStatement().executeQuery("SELECT * FROM cards");
+            PreparedStatement statement = ConnectionFromBd.getConnection().prepareStatement(SQL_GET_ALL_CARD);
+            ResultSet set = statement.executeQuery();
             while (set.next()) {
                 Account account = accountRepository.getById(set.getInt("account_id"));
                 Client client = account.getClient();

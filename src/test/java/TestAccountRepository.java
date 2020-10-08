@@ -5,7 +5,9 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import repository.AccountRepository;
 import repository.AccountRepositoryImpl;
+import repository.ClientRepository;
 import repository.ClientRepositoryImpl;
 import util.ConnectionFromBd;
 
@@ -18,8 +20,8 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class TestAccountRepository {
-    private AccountRepositoryImpl repository;
-    private ClientRepositoryImpl clientRepository;
+    private AccountRepository accountrepository;
+    private ClientRepository clientRepository;
     private AtomicLong newId;
 
     @Before
@@ -29,13 +31,13 @@ public class TestAccountRepository {
         RunScript.execute(connection, new FileReader("src/main/resources/bd/initBD.sql"));
         RunScript.execute(connection, new FileReader("src/main/resources/bd/populateBD.sql"));
 
-        repository = new AccountRepositoryImpl();
         clientRepository = new ClientRepositoryImpl();
+        accountrepository = new AccountRepositoryImpl(clientRepository);
         newId = new AtomicLong(100_006);
     }
 
     @After
-    public void closeConnect(){
+    public void closeConnect() {
         ConnectionFromBd.closeConnection();
     }
 
@@ -44,7 +46,7 @@ public class TestAccountRepository {
         Account oldClient = new Account(100_002l, new Client(100_000l, "Vasay"),
                 "1111111111", 1000.0, "RUB");
 
-        Account newAccount = repository.getById(100_002);
+        Account newAccount = accountrepository.getById(100_002);
 
 
         Assert.assertEquals(oldClient, newAccount);
@@ -58,7 +60,7 @@ public class TestAccountRepository {
         Account newAccount = new Account(client,
                 "55555", 1500d, "RUB");
 
-        boolean res = repository.create(newAccount);
+        boolean res = accountrepository.create(newAccount);
 
         Assert.assertTrue(res);
     }
@@ -66,12 +68,12 @@ public class TestAccountRepository {
     @Test
     public void updateAccount() {
         long id = 100_002l;
-        Account oldAccount = repository.getById(id);
+        Account oldAccount = accountrepository.getById(id);
 
-        boolean res = repository.update(new Account(oldAccount.getClient(),
+        boolean res = accountrepository.update(new Account(oldAccount.getClient(),
                 oldAccount.getNumber(), oldAccount.getSum() + 3000, oldAccount.getCurrency()), id);
 
-        Account newAccount = repository.getById(id);
+        Account newAccount = accountrepository.getById(id);
 
         Assert.assertNotEquals(oldAccount, newAccount);
     }
@@ -80,12 +82,12 @@ public class TestAccountRepository {
     public void deleteAccount() {
         long id = 100_002l;
 
-        boolean res = repository.delete(id);
-        List<Account> list = repository.getAll();
+        boolean res = accountrepository.delete(id);
+        List<Account> list = accountrepository.getAll();
 
-        for (Account account : list){
+        for (Account account : list) {
 
-            if(account.getId() == id){
+            if (account.getId() == id) {
                 Assert.assertFalse(true);
             }
         }
@@ -94,14 +96,14 @@ public class TestAccountRepository {
     }
 
     @Test
-    public void getAllAccount(){
+    public void getAllAccount() {
         List<Account> oldList = new ArrayList<>();
         oldList.add(new Account(100_002l, new Client(100_000l, "Vasay"),
                 "1111111111", 1000.0, "RUB"));
         oldList.add(new Account(100_003l, new Client(100001l, "Petya"),
                 "2222222222", 2000.0, "RUB"));
 
-        List<Account> newList = repository.getAll();
+        List<Account> newList = accountrepository.getAll();
 
         Assert.assertEquals(oldList, newList);
     }

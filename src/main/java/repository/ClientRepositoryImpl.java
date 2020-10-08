@@ -3,6 +3,7 @@ package repository;
 import model.Client;
 import util.ConnectionFromBd;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -10,15 +11,20 @@ import java.util.List;
 
 
 public class ClientRepositoryImpl implements ClientRepository {
-
+    private static final String SQL_GET_CLIENT_BY_ID = "SELECT * FROM clients WHERE id = ?";
+    private static final String SQL_CREATE_CLIENT = "INSERT INTO clients (name) VALUES (?)";
+    private static final String SQL_UPDATE_CLIENT = "UPDATE clients SET name = ? WHERE id = ?";
+    private static final String SQL_DELETE_CLIENT = "DELETE FROM clients WHERE id = ?";
+    private static final String SQL_GET_ALL_CLIENT = "SELECT * FROM clients";
 
     @Override
     public Client getById(long id) {
         Client client = null;
 
         try {
-            ResultSet set = ConnectionFromBd.getStatement()
-                    .executeQuery(String.format("SELECT * FROM clients WHERE id = %d", id));
+            PreparedStatement statement = ConnectionFromBd.getConnection().prepareStatement(SQL_GET_CLIENT_BY_ID);
+            statement.setLong(1, id);
+            ResultSet set = statement.executeQuery();
             while (set.next()) {
                 client = new Client(set.getLong("id"), set.getString("name"));
             }
@@ -34,8 +40,9 @@ public class ClientRepositoryImpl implements ClientRepository {
         boolean res = true;
 
         try {
-            ConnectionFromBd.getStatement().executeUpdate(String
-                    .format("INSERT INTO clients (name) VALUES ('%s')", client.getName()));
+            PreparedStatement statement = ConnectionFromBd.getConnection().prepareStatement(SQL_CREATE_CLIENT);
+            statement.setString(1, client.getName());
+            statement.executeUpdate();
         } catch (SQLException e) {
             res = false;
             e.printStackTrace();
@@ -48,8 +55,10 @@ public class ClientRepositoryImpl implements ClientRepository {
         boolean res = true;
 
         try {
-            ConnectionFromBd.getStatement().executeUpdate(String
-                    .format("UPDATE clients SET name = '%s' WHERE id = '%d'", client.getName(), id));
+            PreparedStatement statement = ConnectionFromBd.getConnection().prepareStatement(SQL_UPDATE_CLIENT);
+            statement.setString(1, client.getName());
+            statement.setLong(2, id);
+            statement.executeUpdate();
         } catch (SQLException e) {
             res = false;
             e.printStackTrace();
@@ -62,7 +71,9 @@ public class ClientRepositoryImpl implements ClientRepository {
         boolean res = true;
 
         try {
-            ConnectionFromBd.getStatement().executeUpdate(String.format("DELETE FROM clients WHERE id = %d", id));
+            PreparedStatement statement = ConnectionFromBd.getConnection().prepareStatement(SQL_DELETE_CLIENT);
+            statement.setLong(1, id);
+            statement.executeUpdate();
         } catch (SQLException e) {
             res = false;
             e.printStackTrace();
@@ -74,9 +85,10 @@ public class ClientRepositoryImpl implements ClientRepository {
     public List<Client> getAll() {
         List<Client> list = new ArrayList<>();
         try {
-            ResultSet set = ConnectionFromBd.getStatement().executeQuery("SELECT * FROM clients");
+            PreparedStatement statement = ConnectionFromBd.getConnection().prepareStatement(SQL_GET_ALL_CLIENT);
+            ResultSet set = statement.executeQuery();
 
-            while (set.next()){
+            while (set.next()) {
                 list.add(new Client(set.getLong("id"), set.getString("name")));
             }
         } catch (SQLException e) {

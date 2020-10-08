@@ -4,6 +4,7 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import repository.ClientRepository;
 import repository.ClientRepositoryImpl;
 import util.ConnectionFromBd;
 
@@ -13,10 +14,9 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 
 public class TestClientRepository {
-    private ClientRepositoryImpl repository;
+    private ClientRepository clientRepository;
 
     @Before
     public void initBD() throws FileNotFoundException, SQLException {
@@ -25,19 +25,19 @@ public class TestClientRepository {
         RunScript.execute(connection, new FileReader("src/main/resources/bd/initBD.sql"));
         RunScript.execute(connection, new FileReader("src/main/resources/bd/populateBD.sql"));
 
-        repository = new ClientRepositoryImpl();
+        clientRepository = new ClientRepositoryImpl();
     }
 
     @After
-    public void closeConnect(){
+    public void closeConnect() {
         ConnectionFromBd.closeConnection();
     }
 
     @Test
     public void getClientById() {
-        Client oldClient = new Client(100_001l,"Petya");
+        Client oldClient = new Client(100_001l, "Petya");
 
-        Client newClient = repository.getById(100_001);
+        Client newClient = clientRepository.getById(100_001);
 
         Assert.assertEquals(oldClient, newClient);
     }
@@ -46,7 +46,7 @@ public class TestClientRepository {
     public void createClient() {
         Client oldClient = new Client("Tor");
 
-        boolean res = repository.create(oldClient);
+        boolean res = clientRepository.create(oldClient);
 
         Assert.assertTrue(res);
     }
@@ -54,11 +54,11 @@ public class TestClientRepository {
     @Test
     public void updateClient() {
         long id = 100_001l;
-        Client oldClient = repository.getById(id);
+        Client oldClient = clientRepository.getById(id);
 
-        boolean res = repository.update(new Client("Tor"), id);
+        boolean res = clientRepository.update(new Client("Tor"), id);
 
-        Client newClient = repository.getById(id);
+        Client newClient = clientRepository.getById(id);
 
         Assert.assertNotEquals(oldClient, newClient);
     }
@@ -67,12 +67,12 @@ public class TestClientRepository {
     public void deleteClient() {
         long id = 100_001l;
 
-        boolean res = repository.delete(id);
-        List<Client> list = repository.getAll();
+        boolean res = clientRepository.delete(id);
+        List<Client> list = clientRepository.getAll();
 
-        for (Client client : list){
+        for (Client client : list) {
 
-            if(client.getId() == id){
+            if (client.getId() == id) {
                 Assert.assertFalse(true);
             }
         }
@@ -81,14 +81,13 @@ public class TestClientRepository {
     }
 
     @Test
-    public void getAllClient(){
+    public void getAllClient() {
         List<Client> oldList = new ArrayList<>();
         oldList.add(new Client(100_000l, "Vasay"));
         oldList.add(new Client(100_001l, "Petya"));
 
-        List<Client> newList = repository.getAll();
+        List<Client> newList = clientRepository.getAll();
 
         Assert.assertEquals(oldList, newList);
     }
-
 }

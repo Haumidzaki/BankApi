@@ -6,10 +6,7 @@ public class ConnectionFromBd {
     private static final String DB_URL2 = "jdbc:h2:mem:default";
     private static Connection connection;
 
-    private ConnectionFromBd() {
-    }
-
-    public static Connection getConnection(){
+    public static Connection getConnection() {
         try {
             if (connection != null && !connection.isClosed())
                 return connection;
@@ -31,18 +28,19 @@ public class ConnectionFromBd {
 
     public static Statement getStatement() {
         Statement statement = null;
+        PreparedStatement preparedStatement = null;
         try {
             statement = ConnectionFromBd.getConnection().createStatement();
-        }catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return statement;
     }
 
-    public static boolean isClose(){
+    public static boolean isClose() {
         boolean res = true;
         try {
-            res =  connection.isClosed();
+            res = connection.isClosed();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }

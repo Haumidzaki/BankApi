@@ -6,8 +6,7 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import repository.AccountRepositoryImpl;
-import repository.CardRepositoryImpl;
+import repository.*;
 import util.ConnectionFromBd;
 
 import java.io.FileNotFoundException;
@@ -18,8 +17,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TestCardsRepository {
-    private CardRepositoryImpl cardRepository;
-    private AccountRepositoryImpl accountRepository;
+    private CardRepository cardRepository;
+    private AccountRepository accountRepository;
+    private ClientRepository clientRepository;
 
     @Before
     public void initBD() throws FileNotFoundException, SQLException {
@@ -28,12 +28,13 @@ public class TestCardsRepository {
         RunScript.execute(connection, new FileReader("src/main/resources/bd/initBD.sql"));
         RunScript.execute(connection, new FileReader("src/main/resources/bd/populateBD.sql"));
 
-        cardRepository = new CardRepositoryImpl();
-        accountRepository = new AccountRepositoryImpl();
+        clientRepository = new ClientRepositoryImpl();
+        accountRepository = new AccountRepositoryImpl(clientRepository);
+        cardRepository = new CardRepositoryImpl(accountRepository);
     }
 
     @After
-    public void closeConnect(){
+    public void closeConnect() {
         ConnectionFromBd.closeConnection();
     }
 
@@ -86,9 +87,9 @@ public class TestCardsRepository {
         boolean res = cardRepository.delete(id);
         List<Cards> list = cardRepository.getAll();
 
-        for (Cards card : list){
+        for (Cards card : list) {
 
-            if(card.getId() == id){
+            if (card.getId() == id) {
                 Assert.fail();
             }
         }
@@ -97,7 +98,7 @@ public class TestCardsRepository {
     }
 
     @Test
-    public void getAllCard(){
+    public void getAllCard() {
         List<Cards> oldList = new ArrayList<>();
 
         Client client1 = new Client(100_000l, "Vasay");
