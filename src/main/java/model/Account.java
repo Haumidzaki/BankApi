@@ -2,7 +2,7 @@ package model;
 
 import java.util.Objects;
 
-public class Account extends AbstractBaseEntity {
+public class Account extends BaseEntity {
     private Client client;
     private String number;
     private Double sum;

@@ -2,7 +2,7 @@ package model;
 
 import java.util.Objects;
 
-public class Cards extends AbstractBaseEntity {
+public class Cards extends BaseEntity {
     private Account account;
     private Client client;
     private String number;

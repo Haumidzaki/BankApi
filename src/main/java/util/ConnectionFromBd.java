@@ -20,29 +20,20 @@ public class ConnectionFromBd {
 
     public static void closeConnection() {
         try {
-            connection.close();
+            if(!connection.isClosed()){
+                connection.close();
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    }
-
-    public static Statement getStatement() {
-        Statement statement = null;
-        PreparedStatement preparedStatement = null;
-        try {
-            statement = ConnectionFromBd.getConnection().createStatement();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return statement;
     }
 
     public static boolean isClose() {
-        boolean res = true;
+        boolean res = false;
         try {
             res = connection.isClosed();
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
         return res;
     }

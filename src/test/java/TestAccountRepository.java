@@ -25,15 +25,20 @@ public class TestAccountRepository {
     private AtomicLong newId;
 
     @Before
-    public void initBD() throws FileNotFoundException, SQLException {
-        Connection connection = ConnectionFromBd.getConnection();
+    public void initBD() {
+        try {
+            Connection connection = ConnectionFromBd.getConnection();
 
-        RunScript.execute(connection, new FileReader("src/main/resources/bd/initBD.sql"));
-        RunScript.execute(connection, new FileReader("src/main/resources/bd/populateBD.sql"));
+            RunScript.execute(connection, new FileReader("src/main/resources/bd/initBD.sql"));
+            RunScript.execute(connection, new FileReader("src/main/resources/bd/populateBD.sql"));
 
-        clientRepository = new ClientRepositoryImpl();
-        accountrepository = new AccountRepositoryImpl(clientRepository);
-        newId = new AtomicLong(100_006);
+            clientRepository = new ClientRepositoryImpl();
+            accountrepository = new AccountRepositoryImpl(clientRepository);
+            newId = new AtomicLong(100_006);
+
+        } catch (FileNotFoundException | SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @After
@@ -76,6 +81,7 @@ public class TestAccountRepository {
         Account newAccount = accountrepository.getById(id);
 
         Assert.assertNotEquals(oldAccount, newAccount);
+        Assert.assertTrue(res);
     }
 
     @Test
