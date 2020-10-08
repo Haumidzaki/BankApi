@@ -7,10 +7,10 @@ public class RandomCardNamber {
 
     public static String getNamber(){
         String res = String.format("%d-%d-%d-%d",
-                (0 + (long) (Math.random() * 10000)),
-                (0 + (long) (Math.random() * 10000)),
-                (0 + (long) (Math.random() * 10000)),
-                (0 + (long) (Math.random() * 10000)));
+                (1000 + (long) (Math.random() * 8999)),
+                (1000 + (long) (Math.random() * 8999)),
+                (1000 + (long) (Math.random() * 8999)),
+                (1000 + (long) (Math.random() * 8999)));
         return res;
     }
 }
