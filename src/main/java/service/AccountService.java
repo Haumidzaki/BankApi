@@ -6,6 +6,7 @@ import model.Cards;
 import java.util.List;
 
 public interface AccountService {
+
     Cards createNewCard(long accountId);
 
     Account updateAccountSum(long accountId, double newSum);
