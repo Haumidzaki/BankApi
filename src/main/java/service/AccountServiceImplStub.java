@@ -4,7 +4,6 @@ import model.Account;
 import model.Cards;
 import model.Client;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
