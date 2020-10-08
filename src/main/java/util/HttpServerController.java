@@ -5,22 +5,26 @@ import handlers.AccountHandler;
 import handlers.CardHandler;
 import handlers.TestHandler;
 import service.AccountServiceImpl;
-import service.AccountServiceImplStub;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
 
-public class HttpServerStarter {
+public class HttpServerController {
+    private static HttpServer server;
 
-    public static void startServer(){
+    public static void startServer() {
         try {
-            HttpServer server = HttpServer.create(new InetSocketAddress(8000), 0);
+            server = HttpServer.create(new InetSocketAddress(8000), 0);
             server.createContext("/test", new TestHandler());
-            server.createContext("/account", new AccountHandler(new AccountServiceImplStub()));
-            server.createContext("/card", new CardHandler(new AccountServiceImplStub()));
+            server.createContext("/account", new AccountHandler(new AccountServiceImpl()));
+            server.createContext("/card", new CardHandler(new AccountServiceImpl()));
             server.start();
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static void stopServer() {
+        server.stop(0);
     }
 }
