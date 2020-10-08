@@ -16,8 +16,10 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public Cards createNewCard(long accountId) {
         Account account = accountrepository.getById(accountId);
-        Cards cards = new Cards(account, account.getClient(), RandomCardNamber.getNamber());
-        return cards;
+        String cardNumber = RandomCardNamber.getNamber();
+        Cards cards = new Cards(account, account.getClient(), cardNumber);
+        cardRepository.create(cards);
+        return cardRepository.getCardByNumber(cardNumber);
     }
 
     @Override
