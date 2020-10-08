@@ -22,15 +22,21 @@ public class TestCardsRepository {
     private ClientRepository clientRepository;
 
     @Before
-    public void initBD() throws FileNotFoundException, SQLException {
-        Connection connection = ConnectionFromBd.getConnection();
+    public void initBD(){
+        try {
+            Connection connection = ConnectionFromBd.getConnection();
 
-        RunScript.execute(connection, new FileReader("src/main/resources/bd/initBD.sql"));
-        RunScript.execute(connection, new FileReader("src/main/resources/bd/populateBD.sql"));
+            RunScript.execute(connection, new FileReader("src/main/resources/bd/initBD.sql"));
+            RunScript.execute(connection, new FileReader("src/main/resources/bd/populateBD.sql"));
 
-        clientRepository = new ClientRepositoryImpl();
-        accountRepository = new AccountRepositoryImpl(clientRepository);
-        cardRepository = new CardRepositoryImpl(accountRepository);
+            clientRepository = new ClientRepositoryImpl();
+            accountRepository = new AccountRepositoryImpl(clientRepository);
+            cardRepository = new CardRepositoryImpl(accountRepository);
+
+        }catch (FileNotFoundException | SQLException e){
+            e.printStackTrace();
+        }
+
     }
 
     @After

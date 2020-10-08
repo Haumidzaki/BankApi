@@ -19,13 +19,18 @@ public class TestAccountService {
     private AccountService accountService;
 
     @Before
-    public void initBD() throws FileNotFoundException, SQLException {
-        Connection connection = ConnectionFromBd.getConnection();
+    public void initBD(){
+        try {
+            Connection connection = ConnectionFromBd.getConnection();
 
-        RunScript.execute(connection, new FileReader("src/main/resources/bd/initBD.sql"));
-        RunScript.execute(connection, new FileReader("src/main/resources/bd/populateBD.sql"));
+            RunScript.execute(connection, new FileReader("src/main/resources/bd/initBD.sql"));
+            RunScript.execute(connection, new FileReader("src/main/resources/bd/populateBD.sql"));
 
-        accountService = new AccountServiceImpl();
+            accountService = new AccountServiceImpl();
+
+        }catch (FileNotFoundException | SQLException e){
+            e.printStackTrace();
+        }
     }
 
     @After
