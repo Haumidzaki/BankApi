@@ -1,12 +1,12 @@
 package model;
 
-public class AbstractBaseEntity {
+public class BaseEntity {
     private Long id;
 
-    public AbstractBaseEntity() {
+    public BaseEntity() {
     }
 
-    public AbstractBaseEntity(Long id) {
+    public BaseEntity(Long id) {
         this.id = id;
     }
 
