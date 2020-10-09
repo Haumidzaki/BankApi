@@ -4,6 +4,7 @@ import util.HttpServerController;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.SQLException;
 
@@ -13,10 +14,10 @@ public class Main {
         try {
             System.out.println("Test");
             Connection connection = ConnectionFromBd.getConnection();
-            RunScript.execute(connection, new FileReader("src/main/resources/bd/initBD.sql"));
-            RunScript.execute(connection, new FileReader("src/main/resources/bd/populateBD.sql"));
+            RunScript.execute(connection, new InputStreamReader(Main.class.getResourceAsStream("bd/initBD.sql")));
+            RunScript.execute(connection, new InputStreamReader(Main.class.getResourceAsStream("bd/populateBD.sql")));
             HttpServerController.startServer();
-        } catch (FileNotFoundException | SQLException e){
+        } catch (SQLException e){
             e.printStackTrace();
         }
     }
